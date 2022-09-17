@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <button class="button"></button>
+    <button class="button"></button>
+    <button class="button"></button>
+    <script>
+      //THIS CON CALL
+      //this en este caso no sabe a quien referirse con el name y apellido
+      function saludar() {
+        console.log(`Hola. Soy ${this.name} ${this.apellido}`);
+      }
+
+      const luis = {
+        name: "Luis",
+        apellido: "Martin",
+      };
+      //con el metodo call le estamos asignando el this al objeto luis
+      //el primer parametro es cual sera el this y los siguientes los argumentos de la func
+      saludar.call(luis);
+
+      function caminar(metros, direccion) {
+        console.log(
+          `${this.name} camino ${metros} metros en direccion ${direccion}`
+        );
+      }
+      caminar.call(luis, 400, "noreste");
+
+      //THIS CON APLLY
+      //lo mismo que call solo que pasamos los parametros por un array
+      caminar.apply(luis, [800, "sur"]);
+
+      /*
+        Call - comma: pasaremos los parametros como coma
+        apply - arreglo: pasaremos los parametros en un arreglo
+      */
+
+      //THIS CON BIND
+      //bind retornará una nueva funcion con el this anidado
+      const daniel = { name: "Daniel", apellido: "Sanchez" };
+      //saludar.bind(daniel); //no se llama automaticamente
+      const danielSaluda = daniel.bind(daniel);
+
+      danielSaluda();
+
+      const danielCamina = caminar.bind(daniel); //tambien se pueden hardcodear los argumentos de la funcion aqui incluso poner solo algunos parametros y otros no aqui
+      danielCamina(1000, "este");
+
+      //cuando es util usar estos metodos
+      const buttons = document.getElementsByClassName("button");
+      // button.forEach(button => {
+      //   button.onclick = () => alert("nunca pares de aprender");
+      // });
+      //esto no funciona porque getElementsByClassName retorna una nodelist
+      //y las nodeList no tienen el metodo forEach como los arrays
+
+      //nodeList
+      //esto funciona porque le pusimos el contexto (this) del forEach a button y el unico metodo que necesita forEach es length cosa que las nodeList tienen
+      Array.prototype.forEach.call(buttons, (button) => {
+        button.onclick = () => alert("Nunca pares de aprender");
+      });
+    </script>
+  </body>
+</html>

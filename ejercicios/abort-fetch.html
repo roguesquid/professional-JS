@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <img id="huge-image" height="400" />
+    <button id="load">Load HUGE Image</button>
+    <button id="stop">Stop Fetching</button>
+    <script>
+      const url =
+        "https://images.pexels.com/photos/974470/nature-stars-milky-way-galaxy-974470.jpeg?q=100";
+      const img = document.getElementById("huge-image");
+      const loadButton = document.getElementById("load");
+      const stopButton = document.getElementById("stop");
+      //con let porque lo instanciamos cada vez que clickeamos el boton de "load"
+      let controller;
+
+      function startLoading() {
+        loadButton.disabled = true;
+        loadButton.innerText = "Loading...";
+        stopButton.disabled = false;
+      }
+
+      function stopLoading() {
+        loadButton.disabled = false;
+        loadButton.innerText = "Load HUGE Image";
+        stopButton.disabled = true;
+      }
+
+      loadButton.onclick = async () => {
+        startLoading();
+        //creamos la instancia
+        controller = new AbortController();
+
+        try {
+          //en la config de fetch le decimos que la señal de la peticion depende de si se aborto o no la peticion
+          const response = await fetch(url, { signal: controller.signal });
+          //no queremos el json asi que llamamos al blob que es el binario
+          const blob = await response.blob();
+          //lo tenemos que pasar como url y esta utilidad de los browsers la crea
+          const imgUrl = URL.createObjectURL(blob);
+          img.src = imgUrl;
+        } catch (err) {
+          console.log(err.message);
+        }
+
+        stopLoading();
+      };
+
+      stopButton.onclick = () => {
+        //si le damos clicl a parar carga le enviara la señal a controller.signal y este a su vez a fetch lo que detendra la peticion
+        controller.abort();
+        stopLoading();
+      };
+    </script>
+  </body>
+</html>
