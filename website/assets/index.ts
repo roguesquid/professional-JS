@@ -1,6 +1,6 @@
-import MediaPlayer from './MediaPlayer';
-import AutoPlay from './plugins/AutoPlay';
-import AutoPause from './plugins/AutoPause';
+import MediaPlayer from '@roguesquid/platzimediaplayer';
+import AutoPlay from '@roguesquid/platzimediaplayer/plugins/AutoPlay';
+import AutoPause from '@roguesquid/platzimediaplayer/plugins/AutoPause';
 
 const video = document.querySelector('video');
 const player = new MediaPlayer({
